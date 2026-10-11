@@ -1,4 +1,10 @@
-# LCI 前景模型构建指南
+# LCI 前景模型构建指南 / LCI Foreground Model Building Guide
+
+[中文](#中文) | [English](#english)
+
+<a id="中文"></a>
+
+## 中文
 
 本项目以工业报告、原始清单及其解析结果为证据，构建可追溯的生命周期清单（LCI）前景模型。先明确活动，再用输入输出流连接活动，并把原始数量填入各活动清单。
 
@@ -147,3 +153,159 @@
 - `LC命名规则记录/`（本地项目记录，本发布包不包含）：保存版本改进、制定经验和使用记录。
 
 生成新版本时，前一版放入归档，改动原因与经验另写记录；同步更新本 README 的文件链接。具体模型文件也采用清晰的产品系统名称和版本号，避免覆盖已有成果。
+
+---
+
+<a id="english"></a>
+
+## English
+
+### LCI Foreground Model Building Guide
+
+This project uses industrial reports, source inventories, and parsed documents as evidence to build a traceable life cycle inventory (LCI) foreground model. Identify activities, connect them through input and output flows, and attach the reported quantities to each activity inventory.
+
+There are **four core files: three Markdown specifications and one Excel template**. This README explains how to use them together. Refer to the relevant specification for detailed definitions. The English section corresponds to the Chinese guide; the core documents, filenames, and worksheet names remain in Chinese.
+
+### 1. Roles of the Four Core Files
+
+| Core file | Question it answers | Result |
+| --- | --- | --- |
+| [LCI命名规则.md](LCI命名规则.md) — Naming rules | How are objects identified, distinguished, and assigned IDs? How are flows separated from non-flow records? | Stable object IDs and traceable data-row IDs |
+| [LCI对象字典.md](LCI对象字典.md) — Object dictionary | Which category and object code apply, and what does each code mean? | Defined category and object codes |
+| [LCI流关系与工艺建模规范.md](LCI流关系与工艺建模规范.md) — Flow relationships and process modeling specification | How are activities identified, flow endpoints determined, inventories organized, and checks performed? | Activity structure, flow connections, and modeling steps |
+| [LCI前景模型清单.xlsx](LCI前景模型清单.xlsx) — Foreground inventory workbook | Where is the information recorded, and how does it become a model inventory? | Source evidence, objects, activities, connections, activity inputs and outputs, and check results |
+
+The naming rules and dictionary define object identity. The modeling specification defines the relationships between objects and activities. Excel holds the records and their evidence. These four files provide the guide; a completed workbook is the model deliverable for a specific product system.
+
+### 2. How the Records Relate
+
+- **Raw data** are source facts and evidence: text, quantities, units, periods, operating conditions, locations, and source references. The raw data sheet has no model IDs.
+- **Objects** are the things or indicators identified in the evidence. They include input and output flows, as well as non-flow objects such as personnel, equipment, parameters, and observed indicators.
+- **Data rows** record individual values or descriptions for an object. One object can have several rows for design values, measured values, different periods, or different sources.
+- **Activities** are operations that perform a function, such as fermentation or separation. Equipment and locations describe an activity; an equipment name alone does not define an activity.
+- **Flow relationships** identify the activity a flow leaves and the activity it enters, or its environmental endpoint.
+- **Activity inventories** list inputs and outputs for each activity and reference the corresponding data rows to show reported quantities and their evidence.
+
+Activities form the model structure. Flows connect activities. Data rows attach quantities to flows. Source evidence supports the identification and connections.
+
+#### What Each ID Identifies
+
+| ID | Meaning | Example |
+| --- | --- | --- |
+| Object ID | The type of thing and its input or output location; for example, hydrolyzed sugar added at one feed point | `MAT-HYS-001` |
+| Display ID in a mixed object sheet | `F` identifies flows; `N` identifies non-flow objects | `F-MAT-HYS-001`, `N-PAR-DAYS-001` |
+| Data-row ID | One specific value or description for an object | `R0001` |
+| Activity ID | One activity within a product system | `A0001` |
+| Connection ID | One flow relationship | `C0001` |
+
+These examples explain the format; they are not assignments to actual report data. The sequence in an object ID distinguishes objects of the same type at different locations or interfaces. Different observations of the same object have different data-row IDs. Record the product system in the relevant headers and fields to define the ID scope.
+
+### 3. Build the Model Using the Seven Worksheets
+
+Copy the template to create a working file for the product system. Keep the original template blank. **Deliver each data worksheet for review separately. Prepare the next worksheet only after the user confirms the preceding one; do not complete all worksheets in a single batch.**
+
+#### Step 1: 说明 — Define the Scope
+
+Record the product system, target product, system boundary, source coverage, period, and the versions of the rules, dictionary, modeling specification, and template used.
+
+At this stage, organize the reported inventory. If quantities use different bases, record each basis separately. Align the functional unit later.
+
+#### Step 2: 原始数据表 — Collect the Evidence
+
+**Within the agreed report coverage, collect nearly all numerical values before deciding whether they are flows or useful for modeling.** Include quantities, ratios, ranges, dates, design values, measurements, parameters, equipment data, and personnel data from the main text, tables, figures, notes, and appendices. Preserve units, descriptions, and context. Record the file, page, table or figure number, and row or column location. Classify, assign IDs, and determine uses later in the object sheet.
+
+Page numbers, section numbers, and table or figure labels are source-location metadata and do not need separate data entries. State the scope and reason for any deliberate exclusion. Keep the source of each repeated value. Preserve non-detects, unreported values, and ranges as reported.
+
+Retain source descriptions of origin, destination, location, period, and operating conditions. Use parsed documents to find information. Check the original file when tables are misaligned, units are unclear, or context is ambiguous. Do not add object, activity, or connection IDs to the raw data sheet.
+
+#### Step 3: 对象表 — Record What Each Item Is and What Was Reported
+
+Review each confirmed source record. Describe what it refers to, consult the dictionary, and assign an object ID. Prefix flows with `F` and non-flow objects with `N`. Assign a separate data-row ID to each specific value or description and record its location in the raw data sheet.
+
+For example, hydrolyzed sugar at one feed point is one object. Its reported design input and measured input are two data rows with the same object ID and different data-row IDs. Hydrolyzed sugar at another feed point receives a different object ID. This is an illustration, not actual report data.
+
+Keep all reported quantities for a flow as separate data rows. Do not select a single adopted value in advance. Classify personnel, equipment, operating days, concentrations, and emission limits by their nature. They can describe activities or support later calculations without becoming input or output flows automatically.
+
+If the dictionary does not cover an object, retain its original name, mark it as pending classification, and add a definition and code based on evidence. A dictionary entry does not establish that the product system actually has that input or output.
+
+#### Step 4: 活动表 — Establish the Activity Structure
+
+Identify activities from process descriptions, equipment functions, and location descriptions. Record each activity's ID, name, function, level of detail, coverage, and evidence.
+
+Both object and activity identification depend on source evidence. If review reveals missing information, revise the preceding sheet and seek confirmation again. If only aggregate data are available, establish an activity at that aggregate scope. Keep unclear activity boundaries or levels of detail pending verification.
+
+Activities of the same type or process section can share a worksheet in separate blocks, each with its own ID, inputs, and outputs. **Grouping activities on one worksheet is a presentation choice; it does not merge activities or quantities.**
+
+#### Step 5: 流关系表 — Connect Flows to Activities
+
+For each flow identified in the object sheet, determine the activity it leaves and the activity it enters. Record the connection ID, flow ID, and corresponding data-row IDs.
+
+Preserve the original descriptions of origin and destination. State whether the mapping is explicit in the source, reconstructed from context, a modeling assumption, or pending verification. Use comparable activity levels where possible. Retain the reported scope when the evidence does not support a finer split.
+
+- Between activities: connect the output activity to the input activity.
+- Resources taken from nature: connect an environmental resource endpoint to the input activity.
+- Direct releases to nature: connect the output activity to an environmental endpoint and state the compartment, such as air, water, or soil.
+- Products, co-products, and waste sent for external treatment: record the known destination; keep unknown destinations pending verification.
+
+An internal exchange can appear in both the output activity inventory and the input activity inventory. Both views refer to the same connection; do not count it twice in system totals. Establish physical origins and destinations first. Allocation, substitution, and background database matching follow later.
+
+#### Step 6: 清单 — List All Inputs and Outputs by Activity
+
+Give each activity a header and separate input and output sections. State the activity name, ID, product system, coverage, period, and quantity basis once in the header. Each detail row records the flow ID, name, reported quantity, original unit, origin or destination, status, quantity basis, period or operating conditions, data-row ID, and source location.
+
+The template provides two activity blocks. Add more blocks below as needed. Copy worksheets for different activity groups and place them before the check sheet. Keep the full connection records in the flow relationship sheet; the activity pages present input and output inventories.
+
+Quantities reference the object sheet through data-row IDs. **At this stage, there is no separate quantity-processing sheet, no selection of a single adopted value, and no unit or functional-unit alignment.** List multiple reported values for the same flow in separate rows and state their respective bases. Do not add values from incompatible periods, operating conditions, or quantity bases.
+
+The template currently references rows 7–106 of the object sheet for quantities. Extend the references when records exceed this range. When conversions are needed later, preserve the original values, units, and conversion basis in the activity inventory.
+
+#### Step 7: 核查表 — Check Evidence and Model Connections
+
+Check object and data-row IDs, source locations, activity coverage, flow endpoints, original values and units, conflicting sources, duplicate totals, and shared inputs. Distinguish missing data, unreported values, non-detects, and zero.
+
+Perform applicable balance checks only when units, periods, quantity bases, and boundaries are sufficiently comparable and complete. Otherwise, record the gaps. State which relationships are confirmed and which quantities or endpoints remain pending verification.
+
+### 4. Deliver Worksheets Separately and Check for Omissions
+
+#### Delivery Order
+
+Include the introduction sheet with the first delivery to define the scope. Deliver data worksheets in this order:
+
+| Batch | Deliverable | User review focus |
+| --- | --- | --- |
+| 1 | Raw data sheet — 原始数据表 | Coverage of the agreed source scope; accuracy of values, units, context, and source locations |
+| 2 | Object sheet — 对象表 | Disposition of each evidence item; correct classification; missing or duplicate IDs |
+| 3 | Activity sheet — 活动表 | Complete activities; source-supported functions, locations, and coverage |
+| 4 | Flow relationship sheet — 流关系表 | Origins, destinations, endpoints, and mapping evidence |
+| 5 | Inventories — 清单, one activity-group worksheet at a time | Complete activity inputs and outputs; correct original values, units, and references |
+| 6 | Check sheet — 核查表 | Consolidated check results, revisions, and remaining gaps |
+
+Deliver the current cumulative workbook with each batch and identify the new or revised worksheet. Leave future worksheets blank and state progress in the introduction sheet. Revise after user review. Proceed to the next batch only after the user confirms the current batch. Record checks during each stage and deliver the complete check sheet last. After all batches are confirmed, the consolidated workbook becomes the foreground model inventory.
+
+#### Detect Missing Extraction, IDs, and Inventory Entries
+
+IDs do not guarantee completeness. Compare records against the source item by item instead of checking only whether IDs are consecutive.
+
+1. **Source to raw data: check extraction coverage.** List the files, sections, pages, tables, and figures covered by the batch. Check nearly all numerical values page by page and table or figure by table or figure, including non-flow data. List parsing failures, unprocessed areas, and explicit exclusions with reasons.
+2. **Raw data to objects: check ID coverage.** Record the disposition of each data item: linked to an object and data-row ID, pending classification, or excluded from the object sheet with a reason. Separate multiple data items within one source cell. Retain mappings for duplicate evidence.
+3. **Pending classification: keep gaps visible.** If an object code cannot yet be determined, retain the original name, source, and data-row ID. Mark it as pending classification or ID assignment. Do not force a code. List these items in the delivery rather than hiding them in blank cells or claiming complete ID coverage.
+4. **Objects to connections and inventories: check missing entries.** Each flow data row must have a connection and inventory location, or an explicit status and reason, such as pending connection or outside scope. Retain non-flow parameters, personnel, and equipment in the object sheet and link them to the relevant activity or use.
+5. **Check references in reverse.** Each inventory data-row ID must resolve to an object-sheet record, and each object record must trace back to source evidence. Check duplicate data-row IDs, incorrect reuse of object IDs, blank IDs, and incorrect sources.
+
+Object-sheet review must include a coverage mapping: the raw data sheet and cell or row/column location, corresponding object and data-row IDs, processing status, and reason. This is a traceability reference; it does not add model IDs to the raw data sheet. Include the mapping in the object sheet and record conclusions in the check sheet.
+
+Verify completeness item by item within the agreed source coverage. Explicitly list unprocessed records and pending IDs. Row counts or consecutive IDs alone do not establish completeness.
+
+The resulting deliverable is a traceable physical foreground model. Before subsequent calculations, define the reference quantity and functional unit, align quantity bases, match upstream background datasets and environmental flows, and handle allocation or substitution for multifunctional processes according to the research method. Recording a product output does not by itself determine an allocation factor or a displaced product.
+
+The four core files currently contain specifications and a blank template. Actual report data have not yet been entered, so they do not constitute a completed product model or one ready for environmental impact calculation.
+
+### 5. Project Files and Version Management
+
+- `原始数据/`: original reports and other evidence; preserve the originals.
+- `mineru_std/`: parsed report files for searching and extraction.
+- Project root: the latest four core files and this README.
+- `归档/`: historical versions and backups.
+- `LC命名规则记录/` (local project records; not included in this package): changes, lessons, and usage records.
+
+When producing a new version, archive the preceding one. Record changes and lessons separately and update README links. Name specific model workbooks with a clear product-system name and version to avoid overwriting earlier deliverables.
